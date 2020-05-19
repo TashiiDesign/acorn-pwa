@@ -1,37 +1,43 @@
 
+//Importing all Components for use with Router functionality 
+
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from '../auth/login.vue'
-import Register from '../auth/register.vue'
+import Login from '../components/auth/login.vue'
+import Register from '../components/auth/register.vue'
 import firebase from 'firebase'
-//admin section
-import Home from '../Home.vue'
-import Students from '../admin-views/Students.vue'
-import Classes from '../admin-views/Classes.vue'
-import Timetable from '../admin-views/Timetable.vue'
-import addClass from '../admin-views/addClass.vue'
-import selectedClass from '../admin-views/selectedClass.vue'
-import editClass from '../admin-views/editClass.vue'
-import addStudent from '../admin-views/addStudent.vue'
-import selectedStudent from '../admin-views/selectedStudent.vue'
-import editStudent from '../admin-views/editStudent.vue'
 
-//student section
-import classInfo from '../student-views/class-info.vue'
-import studentTimetable from '../student-views/student-timetable.vue'
+//Admin section
+import Home from '../components/Home.vue'
+import Students from '../components/admin-views/Students.vue'
+import Classes from '../components/admin-views/Classes.vue'
+import Timetable from '../components/admin-views/Timetable.vue'
+import addClass from '../components/admin-views/addClass.vue'
+import selectedClass from '../components/admin-views/selectedClass.vue'
+import editClass from '../components/admin-views/editClass.vue'
+import addStudent from '../components/admin-views/addStudent.vue'
+import selectedStudent from '../components/admin-views/selectedStudent.vue'
+import editStudent from '../components/admin-views/editStudent.vue'
 
 
+//Student Section
+import classInfo from '../components/student-views/class-info.vue'
+import studentTimetable from '../components/student-views/student-timetable.vue'
+
+
+//Enables use of Vue Router
 Vue.use(VueRouter)
 
+//Array of Routes. Specifying which components to show at which paths of application
 const routes = [
 
-  //login
+  //Login Routes 
 
   {
     path: '/login',
     name: 'login',
     component: Login,
-    meta: { 
+    meta: { //Meta property allows restrictions or methods to be added 
       hideNavigation: true,
       requiresGuest: true,
 
@@ -50,7 +56,7 @@ const routes = [
     }
   },
 
-  //admin views
+  //Admin Routes
 
   {
     path: '/',
@@ -67,7 +73,6 @@ const routes = [
     component: Students,
     meta: {
       requiresAuth: true,
-      requiresAdmin: true
     }
   },
   {
@@ -76,7 +81,6 @@ const routes = [
     component: Classes,
     meta: {
       requiresAuth: true,
-      requiresAdmin: true
     }
   },
   {
@@ -85,7 +89,6 @@ const routes = [
     component: Timetable,
     meta: {
       requiresAuth: true,
-      requiresAdmin: true
     }
   },
   {
@@ -94,25 +97,23 @@ const routes = [
     component: addClass,
     meta: {
       requiresAuth: true,
-      requiresAdmin: true
+ 
     }
   },
   {
-    path: '/selectedClass/:className',
+    path: '/selectedClass/:className', //param specific
     name: 'selectedClass',
     component: selectedClass,
     meta: {
       requiresAuth: true,
-      requiresAdmin: true
     }
   },
   {
-    path: '/editClass/:className',
+    path: '/editClass/:className', //param specific
     name: 'editClass',
     component: editClass,
     meta: {
       requiresAuth: true,
-      requiresAdmin: true
     }
   },
 
@@ -122,7 +123,6 @@ const routes = [
     component: addStudent,
     meta: {
       requiresAuth: true,
-      requiresAdmin: true
     }
   },
 
@@ -132,26 +132,24 @@ const routes = [
     component: editStudent,
     meta: {
       requiresAuth: true,
-      requiresAdmin: true
     }
   },
 
   {
-    path: '/selectedStudent/:name',
+    path: '/selectedStudent/:name', //param specific
     name: 'selectedStudent',
     component: selectedStudent,
     meta: {
       requiresAuth: true,
-      requiresAdmin: true
     }
   },
 
 
-  //student views 
+  //Student Routes
 
 
   {
-    path: '/class-info/:name',
+    path: '/class-info/:email', //param specific
     name: 'classInfo',
     component: classInfo,
     meta: {
@@ -159,7 +157,7 @@ const routes = [
     }
   },
   {
-    path: '/student-timetable/:name',
+    path: '/student-timetable/:name', //param specific
     name: 'studentTimetable',
     component: studentTimetable,
     meta: {
@@ -169,34 +167,43 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: 'history', //Either Hash or History can be added as a mode
+  //History allows the ability to go to a previous path (back button). Also removes # from URL
+
   base: process.env.BASE_URL,
-  routes
+  routes 
 })
 
-//nav guards
+//Navigation Guards
+
+//beforeEach(to, from, next) checks when to add the statements below
 
 router.beforeEach((to, from, next) => {
-  //check for authentication guard
+
+  //To: checks for a navigation guard (ex. RequiresAuth - which is declared above)
   if(to.matched.some(record => record.meta.requiresAuth)) {
-    //check if not logged in
+
+    //Checks if a user is NOT logged in
     if(!firebase.auth().currentUser){
-      //go to login
+
+      //If no user is logged in, redirect back to Login 
       next({
         path: '/login',
         query: {
           redirect: to.fullPath
         }
       });
+
     } else {
-      //proceed to route
+      //Otherwise proceed to the intended route
       next();
     }
   } else if (to.matched.some(record => record.meta.requiresGuest)) {
-  //  if(to.matched.some(record => record.meta.requiresGuest)) {
-      //check if logged in
+
+      //Checks if a user IS logged in
       if(firebase.auth().currentUser){
-        //redirect to homepage
+
+        //If logged in, redirects to the homepage
         next({
           path: '/',
           query: {
@@ -204,15 +211,15 @@ router.beforeEach((to, from, next) => {
           }
         })
   } else {
-    //proceed to route
+    //Otherwise proceed to route
     next();
     }  
   } else {
-      //proceed to route
+      //In all other circumstances, proceed to route
       next();
   }
 });
 
   
-
-export default router;
+//Export the router
+export default router; 

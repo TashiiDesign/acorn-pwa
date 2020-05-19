@@ -1,13 +1,13 @@
 <template>
 <v-container>
-
+<!-- On click function for back button -->
     <v-btn tile elevation="0" color="#F26869" class="my-1 mx-0 pa-2" width="10%" height="10%" v-on:click="previousPage">
         <span class="white--text">Back</span>
     </v-btn>
 
     <v-card depressed elevation="0" class="my-2" >
         <v-card-title class="headline">Edit Class</v-card-title>
-     </v-card>
+    </v-card>
 
     <v-form ref="form">
         <v-text-field :rules="inputRules" solo  clear-icon="mdi-close" rows="2" v-model="className" class="white white--text subtitle-2" label="Class Name">CLASS NAME</v-text-field>
@@ -20,60 +20,61 @@
                 <span class="white--text subtitle-2">SELECT CLASS LENGTH</span>
             </v-app-bar>
 
+<!-- Clearable date picker component -->
             <div>
-
                 <v-date-picker no-title width="100%" v-model="dates" range class="my-3" show-current clearable @click:clear="dates = null" ></v-date-picker>
 
-            <template >
-                <v-text-field :rules="inputRulesDate" v-model="dateRangeText" label="Date Range" prepend-icon="mdi-calendar-range" readonly  ></v-text-field>
-            </template>
-            
-        
+<!-- v-model daterangetext allows text to be joined together using a computed property within the script -->
+                <template>
+                    <v-text-field :rules="inputRulesDate" v-model="dateRangeText" label="Date Range" prepend-icon="mdi-calendar-range" readonly  ></v-text-field>
+                </template>
             </div>
-
 
         </div>
 
-           <v-app-bar width="100%" elevation="0" tile block height="30%" color="#85C4BB" class="my-5">
+        <v-app-bar width="100%" elevation="0" tile block height="30%" color="#85C4BB" class="my-5">
             <span class="white--text subtitle-2">SELECT CLASS DAYS AND TIMES</span>
         </v-app-bar>
     
-            <v-select 
-            v-model="days"
-            :items="daysOfTheWeek"
-            label="Select"
-            multiple
-            chips
-            persistent-hint></v-select>
+<!-- v-select creates select field, gets the days from v-model and uses the :items directive to get the selected days --> 
+        <v-select 
+        v-model="days"
+        :items="daysOfTheWeek"
+        label="Select"
+        multiple
+        chips
+        persistent-hint>
 
+        </v-select>
+
+<!-- Loop through and output the days -->
         <div v-for="day in days" :key="day" >
-            <span block tile color="#F26869" class="black--text font-weight-bold ">{{ day }}
-            </span> 
+            <span block tile color="#F26869" class="black--text font-weight-bold ">{{ day }}</span> 
         </div>
 
-      <v-app-bar width="100%" elevation="0" tile block height="30%" color="#85C4BB" class="my-5">
+        <v-app-bar width="100%" elevation="0" tile block height="30%" color="#85C4BB" class="my-5">
             <span class="white--text subtitle-2">EDIT ASSIGNED STUDENTS</span>
         </v-app-bar>
 
-            <v-select 
-            v-model="assignedStudents"
-            :items="students"
-            label="Select"
-            multiple
-            chips
-            hint="Add students"
-            persistent-hint></v-select>
-            
-
-
-    <v-btn :loading="loading" elevation="0" tile color="#F26869"  full-width="100%" block class="my-3 mx-0" v-on:click="updateClass">
-        <span class="white--text">Update Class Information</span>
-    </v-btn>
+<!-- Same structure as days -->
+        <v-select 
+        v-model="assignedStudents"
+        :items="students"
+        label="Select"
+        multiple
+        chips
+        hint="Add students"
+        persistent-hint>
+        
+        </v-select>
+<!-- Button to update the class information defined in a method -->
+        <v-btn :loading="loading" elevation="0" tile color="#F26869"  full-width="100%" block class="my-3 mx-0" v-on:click="updateClass">
+            <span class="white--text">Update Class Information</span>
+        </v-btn>
 
     </v-form>
 
 </v-container>
-  
   
 </template>
 
@@ -83,9 +84,7 @@ import router from '@/router'
 
 
 export default {
-     data() {
-         return {
-
+     data: () => ({
          className: ' ',
          classInfo: ' ',
          dates: [],
@@ -95,7 +94,8 @@ export default {
          assignedStudents: [],
          daysOfTheWeek: ['MON', 'TUE', 'WED', 'THUR', 'FRI'],
          
-            inputRules: [
+    //Defining Form Rules
+        inputRules: [
             v => v.length >= 5 || 'Minimum length 5 characters',
             v => v.length <= 20 || 'Max Length 20 characters'
         ],
@@ -109,37 +109,30 @@ export default {
 
         loading: false
 
+    }),
 
+    created(){ 
+        
+        //Getting students at created lifecycle hook in order to add them to the assigned students list 
 
-         
-     }
-    },
-
-        created(){ 
-            
-
-            db.collection('students').get()
-            .then(querySnapshot => {
-                querySnapshot.forEach(doc => {
-
-                    // const data = [
-                    //    doc.data().firstName,
-                    //     doc.data().lastName, 
-                    // ]
-
-                    this.students.push(doc.data().name)
-                })
-            })
-        }, 
-
-
-     
-
-         beforeRouteEnter (to, from, next) { 
-        db.collection('classes').where('className', '==', to.params.className).get()
-        .then(querySnapshot => {
+        db.collection('students').get()
+        .then(querySnapshot => { //Returns a promise 
             querySnapshot.forEach(doc => {
-                next(vm => {
+
+                this.students.push(doc.data().name) //Pushes the name field to the students array created above 
+            })
+        })
+    }, 
+
+//In-component guard: Called before the route that renders the component is confirmed 
+    beforeRouteEnter (to, from, next) { //Gets the specific data where the className equals the param specified in the router file
+        db.collection('classes').where('className', '==', to.params.className).get() 
+        .then(querySnapshot => { //Returns a promise 
+            querySnapshot.forEach(doc => {
+
+                next(vm => { //vm used to access component instance 
+
+                //When navigation is confirmed, data is added to component instance
                     vm.className = doc.data().className
                     vm.classInfo = doc.data().classInfo
                     vm.dates = doc.data().dates
@@ -151,20 +144,19 @@ export default {
         })
 
     }, 
+
+    //Watches the route for any changes to fetchData 
     watch: {
         '$route': 'fetchData'        
     },
-    
-     
-    
-  
-    methods: {
 
+     
+    methods: {
     
-        fetchData() {
+        fetchData() { //Fetching all the data where the param matches the route 
             db.collection('classes'). where('className', '==', this.$route.params.className).get()
             .then(querySnapshot => {
-                querySnapshot.forEach(doc => {
+                querySnapshot.forEach(doc => {  //Loops through and adds data to object 
                     this.className = doc.data().className
                     this.classInfo = doc.data().classInfo
                     this.dates = doc.data().dates
@@ -176,10 +168,8 @@ export default {
 
         },
 
- 
-
         previousPage(){
-            router.go(-1)
+            router.go(-1) //Router function to go back to the previous route
 
         },
 
@@ -187,7 +177,9 @@ export default {
             db.collection('classes'). where('className', '==', this.$route.params.className).get()
            .then(querySnapshot => {
                 querySnapshot.forEach(doc => {
-                    doc.ref.update({
+
+                    doc.ref.update({ //Updated information is sent to new object with the specified variables
+                    
                         className: this.className,
                         classInfo: this.classInfo, 
                         days: this.days,
@@ -196,7 +188,7 @@ export default {
                         times: this.times, 
 
                     })
-                    .then(() => {
+                    .then(() => { //Router then pushes back to the selected class which matches this router's parameter
                         this.$router.push({name: 'selectedClass', 
                         params: {className: this.className}})
                     })
@@ -205,14 +197,11 @@ export default {
         }
     },
 
-    computed: {
+    computed: { //.join method to concatenate all elements in the array 
       dateRangeText () {
         return this.dates.join(' - ')
       },
     }
-
-
-    
 
 }
 </script>

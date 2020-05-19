@@ -20,20 +20,37 @@
 
 <script>
 import db from '@/firebase'
+import firebase from 'firebase'
 
 
 export default {
     data: () => ({
     assignedClasses: null,
+    displayName: '',
+    email: '',
+    uid: ''
 
         
     }),
 
+created(){
+    firebase.auth()
+    .onAuthStateChanged(function(user) {
+      if (user) {
+      // User is signed in.
+      this.displayName = user.displayName;
+      this.email = user.email;
+      this.uid = user.uid;
+    }
+    })
+},
+
     beforeRouteEnter (to, from, next) {
-        db.collection('students').where('name', '==', to.params.name).get()
+        db.collection('students').where('email', '==', to.params.email).get()
         .then(querySnapshot => {
             querySnapshot.forEach(doc => {
                 next(vm => {
+                    vm.displayName = doc.data().name
                     vm.assignedClasses = doc.data().assignedClasses
                 })
             })
@@ -46,10 +63,10 @@ export default {
 
      methods: {
         fetchData() {
-            db.collection('students'). where('name', '==', this.$route.params.name).get()
+            db.collection('students'). where('email', '==', this.$route.params.email).get()
             .then(querySnapshot => {
                 querySnapshot.forEach(doc => {
-
+                    this.displayName = doc.data().name
                     this.assignedClasses = doc.data().assignedClasses
                 })
             })

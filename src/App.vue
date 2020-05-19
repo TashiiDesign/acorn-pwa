@@ -2,42 +2,78 @@
   <!-- App.vue -->
 
 <v-app>
-   <app-header class="hidden-sm-and-up"></app-header>
+   <app-header-admin v-if="admin" class="hidden-sm-and-up"></app-header-admin> <!-- Admin Header -->
+   <app-header-student v-else-if="student" class="hidden-sm-and-up"></app-header-student> <!-- Student Header -->
 
-  <!-- Sizes your content based upon application components -->
+  <!-- Sizes content based upon application components -->
   <v-content class="hidden-sm-and-up">
 
     <!-- Provides the application the proper gutter -->
     <v-container fluid >
 
-      <!-- If using vue-router -->
+      <!-- Shows the components/pages based on the router configuration -->
       <router-view></router-view>
     </v-container>
   </v-content>
 
   <v-footer>
-   <app-footer></app-footer>
+   <app-footer></app-footer> <!-- Footer -->
   </v-footer>
 </v-app>
 </template>
 
 <script>
-
-import Header from './components/Header';
+//Component Import
+import HeaderAdmin from './components/HeaderAdmin';
+import HeaderStudent from './components/HeaderStudent';
 import Footer from './components/Footer';
+import firebase from 'firebase'
 
 export default {
 
-  name: 'App',
-
+  name: 'App', //Exporting the main application view 
+  
+//Component Register
     components:{
-         'app-header': Header,
+         'app-header-admin': HeaderAdmin,
+         'app-header-student': HeaderStudent,
          'app-footer': Footer
     },
 
     
   data: () => ({
+    admin: false,
+    student: true,
     //
   }),
+
+
+  created() {
+    firebase.auth()
+    .onAuthStateChanged(function(user) {
+    // this.email = user.email
+    userInfo(user);
+
+  })
+    const userInfo = (user) => {
+
+      if (user.email == 'admin@admin.com') {
+          this.admin = true;
+          this.student = false;
+
+
+        } else {
+          this.admin = false;
+          this.student = true;
+        }
+        
+      err => {
+        console.log(err.message);
+      }
+
+    }
+
+
+  },
 };
 </script>

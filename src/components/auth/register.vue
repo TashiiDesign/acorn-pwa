@@ -1,6 +1,8 @@
 <template>
 <v-container>
 
+<!-- Same as Login -->
+
     <v-sheet height="200" elevation="0" class="white">
 
           <v-card depressed elevation="0" class="my-2" >
@@ -52,7 +54,7 @@
 
 <script>
 import firebase from 'firebase'
-
+import db from '@/firebase'
 
 export default {
    data: () => ({
@@ -74,20 +76,27 @@ export default {
     }),
 
     methods: {
+      //Firebase Register functionality, standard syntax
       register: function (e) {
         firebase
         .auth ()
         .createUserWithEmailAndPassword(this.email, this.password)
         .then(
-          user => {
-            alert(`Account created for ${user.email}`);
+          cred => { //get user credentials and set the firestore id to match the user id in the authentication
+            return db.collection('students').doc(cred.user.uid).set({ 
+              email: this.email,
+              password: this.password
+            });
+ 
+          }).then(() => {
+
+            alert('Account Created');
             this.$router.push('/')
           },
+          
           err => {
             alert(err.message);
-            
-          }
-        );
+          })
 
         e.preventDefault();
         

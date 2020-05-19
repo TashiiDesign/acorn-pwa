@@ -3,14 +3,15 @@
 
     <v-sheet height="200" elevation="0" class="white">
         
-    <v-card depressed elevation="0" class="my-2" >
-      <v-card-title class="headline">Login</v-card-title>
-    </v-card>
+      <v-card depressed elevation="0" class="my-2" >
+        <v-card-title class="headline">Login</v-card-title>
+      </v-card>
     </v-sheet>
 
-
+    <!-- Registers a reference to be used within the script to check if the form is valid -->
     <v-form ref="form" v-model="valid" lazy-validation class="center mt-5">
 
+    <!-- Rules can be added when using form validation which are configured within the script -->
         <v-text-field
             prepend-icon="mdi-email"
             v-model="email"
@@ -19,6 +20,7 @@
             required>
         </v-text-field>
 
+    <!-- In order to hide and show the password, a toggle is added to the icon with an attached click event -->
         <v-text-field
             v-model="password"
             prepend-icon="mdi-lock"
@@ -31,18 +33,19 @@
             @click:append="show1 = !show1"
           ></v-text-field>
 
+    <!-- If the form does not meet the critera to be valid, the button is disabled -->
         <v-btn
             :disabled="!valid"
             color="success"
             class="mt-5"
-            v-on:click="login"> Login
+            v-on:click="login"> Login <!-- Login click functionality -->
         </v-btn>
 
+    <!-- Button to go to Register instead -->
         <router-link class="router-link" to="/register">
         <v-btn class="mt-5 ml-6" > or register </v-btn>
         </router-link>
         
-
     </v-form>
 
 </v-container>
@@ -51,50 +54,53 @@
 
 
 <script>
-
-//@vuese
 import firebase from 'firebase'
-
 
 export default {
    data: () => ({
 
-        show1: false,
-        valid: true,
+      //Assigns default booleans
+      show1: false, 
+      valid: true,
 
-          password: '',
-          email: '',
-          passwordRules: [
-          v => !!v || 'Password is required',
-          v => (v && v.length > 3) || 'Password must be more than 3 characters',
-        ],
+      password: '',
+      email: '',
 
-         emailRules: [
-            v => !!v || 'E-mail is required',
-            v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
-         ],
+      //Adding rules for the password 
+      passwordRules: [
+        v => !!v || 'Password is required',
+        v => (v && v.length > 3) || 'Password must be more than 3 characters',
+      ],
+
+      //Adding rules for the email 
+      emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+\..+/.test(v) || 'E-mail must be valid', 
+      ],
     }),
     
 
     methods: {
+
+      //Firebase login functionality, standard syntax
       login: function (e) {
         firebase
         .auth ()
         .signInWithEmailAndPassword(this.email, this.password)
-        .then(
+        .then( //Returns a promise 
           user => {
             alert(`Logged in as ${user.email}`);
-            this.$router.push('/')
+            this.$router.push('/') //Goes to the main homepage view if user is signed in
           },
           err => {
-            alert(err.message);
+            alert(err.message); 
           }
         );
 
-        e.preventDefault();
+        e.preventDefault(); 
         
         
-        this.$refs.form.validate()
+        this.$refs.form.validate() //Checks for form validation using the reference created above
       },
       
     }
@@ -102,6 +108,7 @@ export default {
 </script>
 
 <style>
+  /* No underlines on links*/
   router-link {
     text-decoration: none;
   }

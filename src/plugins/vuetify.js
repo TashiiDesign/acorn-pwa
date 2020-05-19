@@ -1,3 +1,5 @@
+//The Vuetify Plugin config
+
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
 
@@ -15,5 +17,7 @@ export default new Vuetify({
         }
     },
 
-    iconfont: 'mdi',
+    iconfont: 'mdi', //Enables ability to use material icons 
 });
+
+//https://stackoverflow.com/questions/49805913/vuejs-vuetify-color-theme-not-working

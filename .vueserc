@@ -1,0 +1,9 @@
+{
+  "genType": "markdown",
+  "include": ["**/folder1/*.vue","**/folder2/*.vue"],
+  "outDir": "documentation",
+  "markdownDir": "components",
+  "babelParserPlugins": {
+    "jsx": false
+  }
+}

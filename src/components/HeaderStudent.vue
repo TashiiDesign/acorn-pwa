@@ -8,7 +8,7 @@
          <v-avatar class="ma-0 white">
             <v-icon>mdi-account-circle</v-icon>
         </v-avatar>
-        <v-card-title class="body-2 pa-2">ADMIN</v-card-title>
+        <v-card-title class="body-2 pa-2">ACORN </v-card-title>
 
     </v-card>
     
@@ -30,14 +30,7 @@
          
             <v-divider vertical></v-divider>
 
-            <v-btn height="90%"  small tile depressed color="#9DC8B5" class="#F26869 mx-1 ">
-                <!-- <v-icon small class="pa-1">mdi-star</v-icon> -->
-                <router-link to='/students' class="white--text router-link  ">Students</router-link>
-            </v-btn>
-
-            <v-divider vertical></v-divider>
-
-            <v-btn height="90%"  small tile depressed color="#9DC8B5" class="#F26869 mx-1">
+            <v-btn height="90%"  small tile depressed color="#9DC8B5" class=" mx-1">
                 <!-- <v-icon small class="pa-1">mdi-pencil</v-icon>  -->
                 <router-link to='/classes' class="white--text router-link ">Classes</router-link>
             </v-btn>

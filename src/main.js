@@ -1,5 +1,4 @@
 
-
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
@@ -10,14 +9,12 @@ import './firebase'
 
 Vue.config.productionTip = false
 
-
-
-
-//check for user 
-
 let app;
 
-firebase.auth().onAuthStateChanged( () => {
+//Checks whether a user is already logged in, in which case does not redirect back to the login page again even after refresh
+firebase.auth().onAuthStateChanged( () => { 
+
+  //The main Vue Instance of the application 
   if(!app) {
     app = new Vue({
       router,
@@ -26,5 +23,3 @@ firebase.auth().onAuthStateChanged( () => {
     }).$mount('#app')
   }
 })
-
-
