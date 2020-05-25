@@ -149,7 +149,7 @@ const routes = [
 
 
   {
-    path: '/class-info/:email', //param specific
+    path: '/class-info/', 
     name: 'classInfo',
     component: classInfo,
     meta: {

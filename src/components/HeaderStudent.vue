@@ -32,14 +32,14 @@
 
             <v-btn height="90%"  small tile depressed color="#9DC8B5" class=" mx-1">
                 <!-- <v-icon small class="pa-1">mdi-pencil</v-icon>  -->
-                <router-link to='/classes' class="white--text router-link ">Classes</router-link>
+                <router-link to='/class-info' class="white--text router-link ">Classes</router-link>
             </v-btn>
 
             <v-divider vertical></v-divider>
 
             <v-btn  height="90%"  small tile depressed color="#9DC8B5" class="#F26869 mx-1">
                 <!-- <v-icon small class="pa-1">mdi-calendar</v-icon>  -->
-                <router-link to='/timetable' class="white--text router-link  ">Timetable</router-link>
+                <router-link to='/student-timetable' class="white--text router-link  ">Timetable</router-link>
             </v-btn>
   
 

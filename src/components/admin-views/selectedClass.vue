@@ -9,22 +9,27 @@
 
         <div>
             <v-app-bar width="100%" elevation="0" tile block height="30%" color="#85C4BB" class="my-5">
-                <span class="white--text subtitle-2">SCHEDULED DAYS AND TIMES</span>
+                <span class="white--text subtitle-2">SCHEDULED DAYS</span>
             </v-app-bar>
             
             <v-spacer></v-spacer>
     
-            <v-text-field v-model="dateRangeText" prepend-icon="mdi-calendar-range" readonly> {{ dates }} </v-text-field>
+            <div  class="font-weight-bold "> 
+                <v-sheet class="ma-4 #F26869 d-flex justify-center ">
+                    <v-icon>mdi-calendar-range</v-icon>
+                    <span class="title">{{ dates[0] }} - {{ dates[1] }} </span>
+                </v-sheet>
 
-            <div v-for="day in days" :key="day" >
-                <div block tile color="#F26869" class="black--text font-weight-bold ">{{ day }}</div>
+                 <v-sheet  color="#E2EEE4" v-for="day in days" :key="day"  class="d-flex ma-5 justify-center ">
+                    <div  class=" black--text ">{{ day }}</div>
+                 </v-sheet>
+
             </div>
 
-            <div v-for="time in times" :key="time" >
-                <div block tile color="#F26869" class="black--text font-weight-bold ">{{time}} </div>
-            </div>
-
+           
         </div>
+
+    <div class="adminFunctions" v-if="admin">
 
         <div>
 
@@ -34,10 +39,9 @@
 
             <v-spacer></v-spacer>
 
-            <div v-for="assignedStudent in assignedStudents" :key="assignedStudent" 
-            block tile color="#F26869" class="black--text font-weight-bold ">{{ assignedStudent }}
-            
-            </div>
+             <v-sheet color="#E2EEE4" v-for="assignedStudent in assignedStudents" :key="assignedStudent"  class="d-flex ma-5 justify-center ">
+                    <div class="black--text">{{ assignedStudent }}</div>
+             </v-sheet>
 
         </div>
 
@@ -67,6 +71,8 @@
             </router-link>
             
         </v-btn>
+    </div>
+
 
     </v-container>
 
@@ -75,6 +81,7 @@
 <script>
 import db from '@/firebase'
 import router from '@/router'
+import firebase from 'firebase'
 
 export default {
     data: () => ({
@@ -84,7 +91,28 @@ export default {
         days: [],
         times:[],
         assignedStudents: null,
-    }), 
+        admin:false,
+    }),
+    
+    created(){
+        firebase.auth()
+        .onAuthStateChanged(function(user) { //checking auth status
+
+        userInfo(user);
+
+        })
+
+        const userInfo = (user) => { //displaying either admin view or student view based on email
+
+            if(user) {
+
+                if (user.email == 'admin@admin.com') {
+                    this.admin = true;
+                }
+            }
+        }
+    }, 
+
     beforeRouteEnter (to, from, next) {
         db.collection('classes').where('className', '==', to.params.className).get()
         .then(querySnapshot => {

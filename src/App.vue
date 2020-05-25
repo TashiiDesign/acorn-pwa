@@ -42,38 +42,43 @@ export default {
 
     
   data: () => ({
-    admin: false,
-    student: true,
+     admin: false, 
+     student: true,
+     displayName: '',
+     email: '',
     //
   }),
 
 
   created() {
-    firebase.auth()
-    .onAuthStateChanged(function(user) {
-    // this.email = user.email
-    userInfo(user);
-
-  })
-    const userInfo = (user) => {
-
-      if (user.email == 'admin@admin.com') {
-          this.admin = true;
-          this.student = false;
-
-
-        } else {
-          this.admin = false;
-          this.student = true;
-        }
+      firebase.auth()
+      .onAuthStateChanged(function(user) {
         
-      err => {
-        console.log(err.message);
+      userInfo(user);
+
+    })
+      const userInfo = (user) => {
+
+        
+        if(user){
+
+          if (user.email == 'admin@admin.com') {
+              this.admin = true;
+              this.student = false;
+
+
+            } else {
+              this.admin = false;
+              this.student = true;
+            }
+            
+        }
       }
 
+        err => {
+        alert(err.message); 
+      }
     }
-
-
-  },
+  
 };
 </script>

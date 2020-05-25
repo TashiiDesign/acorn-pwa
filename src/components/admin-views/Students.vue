@@ -116,8 +116,6 @@ export default {
 
           const data = { //Assigns the data to properties 
             'id': doc.id, 
-            // 'firstName': doc.data().firstName,
-            // 'lastName': doc.data().lastName, 
             'name': doc.data().name,
             'email': doc.data().email, 
             'password': doc.data().password,

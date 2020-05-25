@@ -5,8 +5,8 @@
         <v-card color="#D1E8D7"  depressed elevation="0" class="my-2 " >
             <v-card-title class="headline"> {{ name }} </v-card-title>
 
-            <v-card-text class="subheading"> Email: {{ email }} </v-card-text>
-            <v-card-text class="subheading"> Password: {{ password }} </v-card-text>
+            <v-card-text class="black-text"> Email: <strong>{{ email }}</strong> </v-card-text>
+            <v-card-text class="black-text"> Password:  <strong>{{ password }}</strong> </v-card-text>
 
         </v-card>
 
@@ -17,9 +17,10 @@
 
             <v-spacer></v-spacer>
 
-            <div v-for="assignedClass in assignedClasses" :key="assignedClass" 
-            block tile color="#F26869" class="black--text font-weight-bold ">{{ assignedClass }}
-            </div>
+             <v-sheet color="#E2EEE4" v-for="assignedClass in assignedClasses" :key="assignedClass"  class="d-flex ma-5 justify-center ">
+                    <div class="black--text">{{ assignedClass }}</div>
+             </v-sheet>
+
 
         </div>
 
@@ -100,14 +101,18 @@ export default {
             })
         },
         deleteStudent () {
-            if(confirm('Are you sure you want to delete this student?')) {
+            if(confirm('Are you sure you want to delete this student?')) { //only deletes student from database 
                  db.collection('students').where('name', '==', this.$route.params.name).get()
                 .then(querySnapshot => {
                 querySnapshot.forEach(doc => {
                     doc.ref.delete()
+                
                     this.$router.push('/students')
                     })
                 })
+
+                //to delete from firebase auth, must add admin functionality 
+                //https://stackoverflow.com/questions/38800414/delete-a-specific-user-from-firebase
             }
         }, 
  

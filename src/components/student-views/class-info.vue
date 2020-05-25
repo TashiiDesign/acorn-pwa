@@ -11,10 +11,15 @@
 
         <v-spacer></v-spacer>
         
-        <div v-for="assignedClass in assignedClasses" :key="assignedClass" block tile color="#F26869" class="black--text font-weight-bold ">
-            {{ assignedClass }}
-        </div>
-        
+            <div id="scroll-target" class=" mt-3 " v-for="assignedClass in assignedClasses" :key="assignedClass" >
+      <router-link class="router-link" v-bind:to="'/selectedClass/' + assignedClass">
+          <v-btn width="100%" color="#D1E8D7"  class="mb-4 d-flex justify-start">
+              <span class="darkgrey--text" >{{ assignedClass }}</span>
+              <v-spacer></v-spacer>
+              <v-icon class="ml-2">mdi-arrow-right-drop-circle</v-icon>
+          </v-btn>
+      </router-link>
+    </div>
     </v-container>
 </template>
 
@@ -25,53 +30,53 @@ import firebase from 'firebase'
 
 export default {
     data: () => ({
-    assignedClasses: null,
-    displayName: '',
-    email: '',
-    uid: ''
-
+      assignedClasses: null,
+      classes: [],
+      days: [], 
+      email: ''
         
     }),
 
 created(){
     firebase.auth()
     .onAuthStateChanged(function(user) {
-      if (user) {
-      // User is signed in.
-      this.displayName = user.displayName;
-      this.email = user.email;
-      this.uid = user.uid;
-    }
+
+        userInfo(user);
+
     })
-},
 
-    beforeRouteEnter (to, from, next) {
-        db.collection('students').where('email', '==', to.params.email).get()
-        .then(querySnapshot => {
-            querySnapshot.forEach(doc => {
-                next(vm => {
-                    vm.displayName = doc.data().name
-                    vm.assignedClasses = doc.data().assignedClasses
-                })
-            })
+    const userInfo = (user) => {
+
+      if(user){ //Checks if there is a user to avoid errors
+
+        db.collection('students').doc(user.uid).get()
+        .then(doc => {
+      
+          this.assignedClasses = doc.data().assignedClasses
+
         })
-    }, 
+      } 
+    }
 
-     watch: {
-        '$route': 'fetchData'        
-    }, 
+    db.collection('classes').get() //Standard Firebase syntax for querying database
+    .then(querySnapshot => { //Returns a promise 
 
-     methods: {
-        fetchData() {
-            db.collection('students'). where('email', '==', this.$route.params.email).get()
-            .then(querySnapshot => {
-                querySnapshot.forEach(doc => {
-                    this.displayName = doc.data().name
-                    this.assignedClasses = doc.data().assignedClasses
-                })
-            })
-        },
-     }
+        querySnapshot.forEach(doc => {
+
+          const data = { 
+            'id': doc.id, 
+            'className': doc.data().className,
+            'classInfo': doc.data().classInfo, 
+            'dates': doc.data().dates, 
+            'days': doc.data().days,
+
+          }
+          this.classes.push(data) //Pushes data into the empty Classes array created above
+        })
+      })
+
+    },
+
 }
 </script>
 

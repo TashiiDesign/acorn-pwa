@@ -15,6 +15,13 @@
     <v-form ref="form" v-model="valid" lazy-validation class="center mt-5">
 
         <v-text-field
+            prepend-icon="mdi-account"
+            v-model="name"
+            label="Full Name"
+            required>
+        </v-text-field>
+
+        <v-text-field
             prepend-icon="mdi-email"
             v-model="email"
             :rules="emailRules"
@@ -61,7 +68,7 @@ export default {
 
         show1: false,
         valid: true,
-
+          name: '',
           password: '',
           email: '',
           passwordRules: [
@@ -85,7 +92,8 @@ export default {
           cred => { //get user credentials and set the firestore id to match the user id in the authentication
             return db.collection('students').doc(cred.user.uid).set({ 
               email: this.email,
-              password: this.password
+              password: this.password,
+              name: this.name
             });
  
           }).then(() => {

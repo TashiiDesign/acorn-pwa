@@ -89,7 +89,8 @@ export default {
         .signInWithEmailAndPassword(this.email, this.password)
         .then( //Returns a promise 
           user => {
-            alert(`Logged in as ${user.email}`);
+            alert('Login Successful' );
+            console.log(user)
             this.$router.push('/') //Goes to the main homepage view if user is signed in
           },
           err => {

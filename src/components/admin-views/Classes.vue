@@ -118,7 +118,7 @@ export default {
 
     created(){ 
       db.collection('classes').get() //Standard Firebase syntax for querying database
-      .then(querySnapshot => { //Returns and promise 
+      .then(querySnapshot => { //Returns a promise 
 
         querySnapshot.forEach(doc => {
 
