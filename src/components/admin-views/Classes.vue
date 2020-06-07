@@ -13,6 +13,7 @@
         cache-items
         class="mx-4"
         flat
+        autocomplete
         hide-no-data
         hide-details
         label="Search Classes"
@@ -35,13 +36,12 @@
     <div width="100%" class="d-flex justify-space-between justify-space-around">
 
       <v-chip-group v-model="days" column multiple >
-        <v-chip filter outlined v-for="week in daysOfTheWeek" :key="week">
+        <v-chip v-model="selectedDay" filter outlined v-for="week in daysOfTheWeek" :key="week" v-on:click="filterDays">
           {{week}}
         </v-chip>
       </v-chip-group>
-      
-    </div>
 
+    </div>
   <!-- Add class button -->
   <v-btn fixed bottom right fab color="#F26869">
 
@@ -71,6 +71,8 @@
 
 <script>
 import db from '@/firebase'
+import router from '@/router'
+import firebase from 'firebase'
 
 export default {
       data: () => ({
@@ -108,7 +110,7 @@ export default {
       },
 
       filterDays() {
-        this.classes.days.includes()
+        // this.classes.days.includes()
 
       }, 
 
@@ -117,6 +119,18 @@ export default {
 //Using a lifecycle hook to get database collection when component/instance is created
 
     created(){ 
+        firebase.auth() 
+        .onAuthStateChanged(function(user) {
+                
+            userInfo(user);
+        })
+
+    const userInfo = (user) => {
+
+      if (user.email !== 'admin@admin.com'){
+        router.push('/')
+      } else {
+
       db.collection('classes').get() //Standard Firebase syntax for querying database
       .then(querySnapshot => { //Returns a promise 
 
@@ -135,7 +149,9 @@ export default {
           this.searchData.push(doc.data().className)
         })
       })
-    }, 
+    }
+  } 
+}
 }
 
 </script>

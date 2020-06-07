@@ -46,12 +46,12 @@ export default {
 
       })
 
-      const userInfo = (user) => { //displaying either admin view or student view based on email
+      const userInfo = (user) => { 
 
 
         if(user){ //Only looks for user.email if a user is logged in
 
-          if (user.email == 'admin@admin.com') { 
+          if (user.email == 'admin@admin.com') {  //displaying either admin view or student view based on email
               this.admin = true;
               this.student = false;
 

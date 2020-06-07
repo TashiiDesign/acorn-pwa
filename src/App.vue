@@ -2,11 +2,11 @@
   <!-- App.vue -->
 
 <v-app>
-   <app-header-admin v-if="admin" class="hidden-sm-and-up"></app-header-admin> <!-- Admin Header -->
-   <app-header-student v-else-if="student" class="hidden-sm-and-up"></app-header-student> <!-- Student Header -->
+   <app-header-admin v-if="admin"></app-header-admin> <!-- Admin Header -->
+   <app-header-student v-else-if="student"></app-header-student> <!-- Student Header -->
 
   <!-- Sizes content based upon application components -->
-  <v-content class="hidden-sm-and-up">
+  <v-content>
 
     <!-- Provides the application the proper gutter -->
     <v-container fluid >

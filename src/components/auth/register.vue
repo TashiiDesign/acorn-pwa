@@ -1,15 +1,15 @@
 <template>
-<v-container>
-
 <!-- Same as Login -->
+  <div>
 
-    <v-sheet height="200" elevation="0" class="white">
+      <v-img src="../../assets/acorn-pwa-logo-background.png" contain>
 
-          <v-card depressed elevation="0" class="my-2" >
-            <v-card-title class="headline">Register</v-card-title>
-          </v-card>
-        
-    </v-sheet>
+        <v-img src="../../assets/acorn-pwa-logo-header.png" width="300" class=" ma-auto mt-2"></v-img>
+      
+      </v-img>
+
+      
+    <v-container>
 
 
     <v-form ref="form" v-model="valid" lazy-validation class="center mt-5">
@@ -54,7 +54,10 @@
 
     </v-form>
 
-</v-container>
+    </v-container>
+
+  </div>
+  
   
 </template>
 

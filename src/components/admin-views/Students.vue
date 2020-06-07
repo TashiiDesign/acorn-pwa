@@ -70,6 +70,8 @@
 <script>
 
 import db from '@/firebase'
+import firebase from 'firebase'
+import router from '@/router'
 
 export default {
       data: () => ({
@@ -80,6 +82,7 @@ export default {
       loading: false,
       search: null,
       select: null,
+      email: ''
     }),
 
       watch: {
@@ -109,26 +112,40 @@ export default {
 //Using the 'created' Lifecycle Hook to retreive the students when the instance has been created
 
     created(){
-
-      db.collection('students').get() //Syntax for querying firebase collections 
-      .then(querySnapshot => { //Returns a promise
-        querySnapshot.forEach(doc => { 
-
-          const data = { //Assigns the data to properties 
-            'id': doc.id, 
-            'name': doc.data().name,
-            'email': doc.data().email, 
-            'password': doc.data().password,
-            'assignedClasses': doc.data().assignedClasses,
-
-          }
-          this.students.push(data) //Pushes the data object into the empty students array declared at the top 
-
-          this.searchData.push(doc.data().name)
+      
+        firebase.auth() 
+        .onAuthStateChanged(function(user) {
+                
+            userInfo(user);
         })
-      })
-    },    
 
+    const userInfo = (user) => {
+
+      if (user.email !== 'admin@admin.com'){
+        router.push('/')
+      } else {
+
+        db.collection('students').get() //Syntax for querying firebase collections 
+        .then(querySnapshot => { //Returns a promise
+          querySnapshot.forEach(doc => { 
+
+            const data = { //Assigns the data to properties 
+              'id': doc.id, 
+              'name': doc.data().name,
+              'email': doc.data().email, 
+              'password': doc.data().password,
+              'assignedClasses': doc.data().assignedClasses,
+
+            }
+            this.students.push(data) //Pushes the data object into the empty students array declared at the top 
+
+            this.searchData.push(doc.data().name)
+          })
+        })
+      }
+        
+    } 
+  }
 }
 </script>
 

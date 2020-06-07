@@ -1,12 +1,15 @@
 <template>
-<v-container>
 
-    <v-sheet height="200" elevation="0" class="white">
-        
-      <v-card depressed elevation="0" class="my-2" >
-        <v-card-title class="headline">Login</v-card-title>
-      </v-card>
-    </v-sheet>
+  <div>
+
+      <v-img src="../../assets/acorn-pwa-logo-background.png" contain>
+
+        <v-img src="../../assets/acorn-pwa-logo-header.png" width="300" class=" ma-auto mt-2"></v-img>
+      
+      </v-img>
+
+      
+    <v-container>
 
     <!-- Registers a reference to be used within the script to check if the form is valid -->
     <v-form ref="form" v-model="valid" lazy-validation class="center mt-5">
@@ -48,8 +51,14 @@
         
     </v-form>
 
-</v-container>
-  
+    
+
+    </v-container>
+
+
+
+  </div>
+
 </template>
 
 
@@ -113,4 +122,5 @@ export default {
   router-link {
     text-decoration: none;
   }
+
 </style>

@@ -41,26 +41,25 @@ export default {
 
           
         const userInfo = (user) => {  //Getting name of the current logged in user
-
-            //Doesn't allow firebase to find data in build but causes errors that don't affect anything if not included 
-
-                //if(user && !user.email == 'admin@admin.com'){
-                
+            
+            //if(user && !user.email == 'admin@admin.com'){
+            //Doesn't allow firebase to find data in build but 
+            //causes errors that don't affect anything if not included 
 
                     db.collection('students').doc(user.uid).get()
                     .then(doc => {
 
-                        const studentData = {
+            const studentData = {
 
-                            name: doc.data().name,
-                            email: doc.data().email
-                        }
-                    
-                        this.studentDatas.push(studentData)
+                name: doc.data().name,
+                email: doc.data().email
+            }
+        
+            this.studentDatas.push(studentData)
 
-                        })
-                //}
-            
+            })
+
+
             
         }
 

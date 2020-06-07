@@ -57,6 +57,7 @@ const routes = [
   },
 
   //Admin Routes
+  
 
   {
     path: '/',
@@ -157,7 +158,7 @@ const routes = [
     }
   },
   {
-    path: '/student-timetable/:name', //param specific
+    path: '/student-timetable/', //param specific
     name: 'studentTimetable',
     component: studentTimetable,
     meta: {
